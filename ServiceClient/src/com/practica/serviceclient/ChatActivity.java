@@ -1,17 +1,11 @@
 package com.practica.serviceclient;
 
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Vector;
-
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,13 +19,12 @@ import android.widget.TextView.BufferType;
 public class ChatActivity extends Activity implements OnClickListener
 {
 	
-	private ServiceClientActivity parent;
 	private Button sendb,retb;
 	private static TextView tchat;
 	private EditText echat;
 	private static ScrollView scroll;
 	
-	private static HashMap h;
+	private static HashMap<String, Integer> h;
 	private static int maxcolor = -1;
 	
     @Override
@@ -59,7 +52,7 @@ public class ChatActivity extends Activity implements OnClickListener
             public void onClick(View v) {
             	
             	String s = echat.getText().toString();
-            	parent.sendChatText(s);
+            	ServiceClientActivity.sendChatText(s);
             	echat.setText("");
 
             }
@@ -69,12 +62,12 @@ public class ChatActivity extends Activity implements OnClickListener
             @Override
             public void onClick(View v) {
             	
-            	parent.chat_active = false;
+            	ServiceClientActivity.chat_active = false;
             	finish();
             }
           });
         
-        parent.chat_active = true;
+        ServiceClientActivity.chat_active = true;
     }
     
     
@@ -85,14 +78,8 @@ public class ChatActivity extends Activity implements OnClickListener
 		
 	}
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		
-	}
 
-
-	public static void writeChat(String s, String user)
+	public static void writeChat(String message, String user)
 	{
 		
 		int color = Color.BLACK;
@@ -110,7 +97,7 @@ public class ChatActivity extends Activity implements OnClickListener
 				h.put(user, color);
 			}
 			
-			SpannableString text = new SpannableString(user+": "+s+"\n");   
+			SpannableString text = new SpannableString(user+": "+message+"\n");   
 			text.setSpan(new ForegroundColorSpan(color), 0, text.length(), 0);
 			
 			tchat.append(text);
@@ -156,6 +143,13 @@ public class ChatActivity extends Activity implements OnClickListener
 				break;
 		}		
 		return c;
+	}
+
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

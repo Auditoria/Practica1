@@ -8,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,8 +28,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,9 +47,6 @@ public class ServiceClientActivity extends Activity implements OnClickListener
 	 /** Target we publish for clients to send messages to IncomingHandler. */
     final Messenger mMessenger = new Messenger(new IncomingHandler());
     
-    private static ChatActivity chat;
-    private static LogActivity log;
-    private static LocActivity loc;
     public static boolean chat_active = false;
     public static boolean log_active = false;
     public static boolean loc_active = false;
@@ -61,9 +55,8 @@ public class ServiceClientActivity extends Activity implements OnClickListener
     private LinearLayout ly;
     private EditText ename;
     
-    private static HashMap husers;
+    private static HashMap<String, Integer> husers;
     
-    private int nusers=0;
     private int nid=0;
     
     private LocationListener mloc;
@@ -129,8 +122,6 @@ public class ServiceClientActivity extends Activity implements OnClickListener
         husers = new HashMap<String, Integer>();
         
         nid++;
-        nusers++;
-              
         Button button = (Button)findViewById(R.id.button_change);
         
         button.setOnClickListener(new OnClickListener() {
@@ -255,7 +246,7 @@ public class ServiceClientActivity extends Activity implements OnClickListener
 				msg.setData(b);
 				// Send Broadcast Message to the service.
 				mService.send(msg);
-				chat.writeChat(fmsg.getChat(), UserName);
+				ChatActivity.writeChat(fmsg.getChat(), UserName);
 				
 				Log.e("ServiceBroadcastClientActivity", "onClick::Message send to service ("+fmsg.getType()+","+fmsg.getFrom()+","+fmsg.getLocation().toString()+")");
 			} 
@@ -275,7 +266,6 @@ public class ServiceClientActivity extends Activity implements OnClickListener
 	    	husers.put(friend, 100+nid);
 	    	
 	    	nid++;
-	    	nusers++;
 	    	cb.setText(friend);
 	    	cb.setTextColor(Color.BLACK);
 	    	cb.setChecked(true);
@@ -292,9 +282,8 @@ public class ServiceClientActivity extends Activity implements OnClickListener
     		CheckBox cb = (CheckBox) findViewById(id);
     		ly.removeView(cb);
     		husers.remove(friend);
-    		if(chat_active)chat.removeUser(friend);
-    		if(log_active)loc.removeUser(friend);
-    		nusers--;
+    		if(chat_active)ChatActivity.removeUser(friend);
+    		if(log_active)LocActivity.removeUser(friend);
     		
     	}
     }
@@ -310,7 +299,7 @@ public class ServiceClientActivity extends Activity implements OnClickListener
     {
 
     	Location location = milocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-    	if(location != null && loc_active)loc.updateSelf(location);
+    	if(location != null && loc_active)LocActivity.updateSelf(location);
     	
         if (mService != null && location != null) {
         	
@@ -353,27 +342,27 @@ public class ServiceClientActivity extends Activity implements OnClickListener
     				
     				Log.e("ServiceBroadcastClientActivity", "handleMessage::Message received from service ("+fmsg.getType()+","+fmsg.getFrom()+","+fmsg.getLocation().toString()+")");
     				
-    				if(log_active)log.writeLog(fmsg);
+    				if(log_active)LogActivity.writeLog(fmsg);
     				
     				switch (fmsg.getType())
     				{
     				case FriendMessageParcelable.MSG_CHAT:
-    					if(chat_active && useractive(fmsg.getFrom()))chat.writeChat(fmsg.getChat(), fmsg.getFrom());
+    					if(chat_active && useractive(fmsg.getFrom()))ChatActivity.writeChat(fmsg.getChat(), fmsg.getFrom());
     					addfriend(fmsg.getFrom());
     					break;
     					
     				case FriendMessageParcelable.MSG_ADD_FRIEND:
-    					if(chat_active)chat.writeChat(fmsg.getChat(), fmsg.getFrom());
+    					if(chat_active)ChatActivity.writeChat(fmsg.getChat(), fmsg.getFrom());
     					addfriend(fmsg.getFrom());
     					break;
     					
     				case FriendMessageParcelable.MSG_REMOVE_FRIEND:
-    					if(chat_active)chat.writeChat(fmsg.getChat(), fmsg.getFrom());
+    					if(chat_active)ChatActivity.writeChat(fmsg.getChat(), fmsg.getFrom());
     					removefriend(fmsg.getFrom());
     					break;
     					
     				case FriendMessageParcelable.MSG_UPDATE_MY_LOCATION:
-    					if(loc_active)loc.updateMap(fmsg.getFrom(), fmsg.getLocation());
+    					if(loc_active)LocActivity.updateMap(fmsg.getFrom(), fmsg.getLocation());
     					break;
     				}
     				
@@ -404,10 +393,6 @@ public class ServiceClientActivity extends Activity implements OnClickListener
 
   
     private void updateServiceStatus() {
-  	  String bindStatus = mConnection == null ? "unbound" : "bound";
-  	  String statusText = "Service status: "+
-  							bindStatus+"\n";
-  	  
   	  if (mConnection != null)
   	  {
 			tstatus.setText(getString(R.string.seryes));
@@ -506,16 +491,7 @@ public class ServiceClientActivity extends Activity implements OnClickListener
 
        
     
-    private OnClickListener mConnectListener = new OnClickListener() {
-        public void onClick(View v) {
-       
-            Intent serviceIntent = new Intent();
-            serviceIntent.setAction("com.practica.ServiceBroadCastClient.BROADCAST_MESSAGE_SERVICE");
-            bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
-        }
-    };
-
-	@Override
+    @Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		
@@ -530,8 +506,8 @@ public class ServiceClientActivity extends Activity implements OnClickListener
     		// TODO Auto-generated method stub
     		Log.d("ServiceBroadcastClientActivity","Location Updated");
     		
-    		double lat1 = loc.getLatitude();
-    		double lon1 = loc.getLongitude();
+    		loc.getLatitude();
+    		loc.getLongitude();
     		
     		
     		updateloc();

@@ -1,32 +1,22 @@
 package com.practica.serviceclient;
 
 import java.util.Calendar;
-import java.util.HashMap;
-
 import com.practica.ServiceBroadcastClient.FriendMessageParcelable;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.TextView.BufferType;
 
 
 public class LogActivity extends Activity implements OnClickListener
 {
 	
-	private ServiceClientActivity parent;
-	private Button sendb,retb;
+	private Button retb;
 	private static TextView tlog;
-	private EditText echat;
 	private static ScrollView scroll;
 	
 
@@ -48,12 +38,12 @@ public class LogActivity extends Activity implements OnClickListener
             @Override
             public void onClick(View v) {
             	
-            	parent.log_active = false;
+            	ServiceClientActivity.log_active = false;
             	finish();
             }
           });
         
-        parent.log_active = true;
+        ServiceClientActivity.log_active = true;
     }
     
     

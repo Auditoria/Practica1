@@ -4,19 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -27,12 +21,11 @@ import android.widget.Button;
 
 public class LocActivity extends MapActivity {
 
-	private ServiceClientActivity parent;
 	private static MapView mMapView;
 	
 	private static Drawable marker,selfmarker;
 	
-	private static HashMap h;
+	private static HashMap<String, GeoPoint> h;
 	private static MyItemizedOverlay myItemizedOverlay;
 	private static MyItemizedOverlay SelfOverlay;
     @Override
@@ -54,7 +47,7 @@ public class LocActivity extends MapActivity {
             @Override
             public void onClick(View v) {
             	
-            	parent.loc_active = false;
+            	ServiceClientActivity.loc_active = false;
             	finish();
             }
           });
@@ -78,7 +71,7 @@ public class LocActivity extends MapActivity {
         SelfOverlay = new MyItemizedOverlay(selfmarker);
         mMapView.getOverlays().add(SelfOverlay);
         
-        parent.loc_active = true;
+        ServiceClientActivity.loc_active = true;
         
         
         
@@ -99,8 +92,8 @@ public class LocActivity extends MapActivity {
     	GeoPoint gp = new GeoPoint(lat,lon);
     	h.put(user, gp);
     	
-    	Collection c = h.values();
-    	Iterator it = c.iterator();
+    	Collection<GeoPoint> c = h.values();
+    	Iterator<GeoPoint> it = c.iterator();
     	
     	myItemizedOverlay.clearItems();
     	
@@ -125,8 +118,8 @@ public class LocActivity extends MapActivity {
     {
     	if(h.containsKey(user))h.remove(user);
     	
-    	Collection c = h.values();
-    	Iterator it = c.iterator();
+    	Collection<GeoPoint> c = h.values();
+    	Iterator<GeoPoint> it = c.iterator();
     	
     	myItemizedOverlay.clearItems();
     	
