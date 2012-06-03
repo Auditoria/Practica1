@@ -65,14 +65,7 @@ public class LogActivity extends Activity implements OnClickListener
 	{
 			
 		Calendar c = Calendar.getInstance(); 
-		int seconds = c.get(Calendar.SECOND);
-		int min = c.get(Calendar.MINUTE);
-		int hour = c.get(Calendar.HOUR_OF_DAY);
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		int month = c.get(Calendar.MONTH);
-		int year = c.get(Calendar.YEAR);
-		
-		String date = new String(day+"-"+month+"-"+year+"||"+hour+":"+min+":"+seconds);
+		String date = getDate(c);
 		String loc = new String ("["+fmsg.getLocation().getLatitude()+","+fmsg.getLocation().getLatitude()+"]");
 		//Log.e("ServiceBroadcastClientActivity", "handleMessage::Message received from service ("+fmsg.getType()+","+fmsg.getFrom()+","+fmsg.getLocation().toString()+")");
 	
@@ -87,6 +80,16 @@ public class LogActivity extends Activity implements OnClickListener
 			scroll.scrollTo(0, height-scroll.getMeasuredHeight());
 		}
 		
+	}
+
+
+	/**
+	 * @param c Calendar
+	 * @return String
+	 */
+	private static String getDate(Calendar c) {
+		String date = new String(c.get(Calendar.DAY_OF_MONTH)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.YEAR)+"||"+c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND));
+		return date;
 	}
 	
 }
