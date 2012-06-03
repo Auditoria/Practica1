@@ -57,13 +57,9 @@ public class LocActivity extends MapActivity {
         marker=getResources().getDrawable(R.drawable.marker);
         selfmarker=getResources().getDrawable(R.drawable.selfmarker);
         
-        int markerWidth = marker.getIntrinsicWidth();
-        int markerHeight = marker.getIntrinsicHeight();
-        marker.setBounds(0, markerHeight, markerWidth, 0);
+        marker.setBounds(0, marker.getIntrinsicHeight(), marker.getIntrinsicWidth(), 0);
         
-        markerWidth = selfmarker.getIntrinsicWidth();
-        markerHeight = selfmarker.getIntrinsicHeight();
-        selfmarker.setBounds(0, markerHeight, markerWidth, 0);
+        selfmarker.setBounds(0, selfmarker.getIntrinsicHeight(), selfmarker.getIntrinsicWidth(), 0);
     
         myItemizedOverlay = new MyItemizedOverlay(marker);
         mMapView.getOverlays().add(myItemizedOverlay);
@@ -87,8 +83,8 @@ public class LocActivity extends MapActivity {
     
     public static void updateMap(String user, Location l)
     {
-    	int lat = (int)(l.getLatitude()*1000000);
-    	int lon = (int)(l.getLongitude()*1000000);
+    	int lat = latitudeToInt(l);
+    	int lon = longitudeToInt(l);
     	GeoPoint gp = new GeoPoint(lat,lon);
     	h.put(user, gp);
     	
@@ -103,11 +99,27 @@ public class LocActivity extends MapActivity {
         }
         
     }
+
+	/**
+	 * @param l Location
+	 * @return int Longitude
+	 */
+	private static int longitudeToInt(Location l) {
+		return (int)(l.getLongitude()*1000000);
+	}
+
+	/**
+	 * @param l Location
+	 * @return int Latitude
+	 */
+	private static int latitudeToInt(Location l) {
+		return (int)(l.getLatitude()*1000000);
+	}
     
     public static void updateSelf(Location l)
     {
-    	int lat = (int)(l.getLatitude()*1000000);
-    	int lon = (int)(l.getLongitude()*1000000);
+    	int lat = latitudeToInt(l);
+    	int lon = longitudeToInt(l);
     	GeoPoint gp = new GeoPoint(lat,lon);
     	
     	SelfOverlay.clearItems();
