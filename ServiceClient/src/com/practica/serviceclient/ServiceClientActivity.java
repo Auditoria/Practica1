@@ -430,10 +430,7 @@ public class ServiceClientActivity extends Activity implements OnClickListener
 				msg.setData(b);
                 mService.send(msg);
 				
-            } catch (RemoteException e) {
-                // There is nothing special we need to do if the service
-                // has crashed.
-            }
+            } 
         }
     	
     }
