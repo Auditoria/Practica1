@@ -213,7 +213,7 @@ public class ServiceClientActivity extends Activity implements OnClickListener
     	if(husers.containsKey(name))
     	{
     		Toast.makeText(this, getString(R.string.userexist), Toast.LENGTH_LONG).show();
-    		return;
+    		return true;
     	}
     	unregister();
 
@@ -250,9 +250,6 @@ public class ServiceClientActivity extends Activity implements OnClickListener
 				
 				Log.e("ServiceBroadcastClientActivity", "onClick::Message send to service ("+fmsg.getType()+","+fmsg.getFrom()+","+fmsg.getLocation().toString()+")");
 			} 
-			catch (RemoteException e) {
-				//Print("Error, Sending message!!!\n");
-	        }
         }
     }
     
@@ -318,9 +315,6 @@ public class ServiceClientActivity extends Activity implements OnClickListener
     			
     			Log.e("ServiceBroadcastClientActivity", "onClick::Message send to service ("+fmsg.getType()+","+fmsg.getFrom()+","+fmsg.getLocation().toString()+")");
     		} 
-    		catch (RemoteException e) {
-    			//Print("Error, Sending message!!!\n");
-            }
         }
     	
     }
